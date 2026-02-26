@@ -1,0 +1,7 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Sensitive vars (optional; uncomment if you don't want to commit tfvars)
+# terraform.tfvars

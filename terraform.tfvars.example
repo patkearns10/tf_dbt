@@ -1,0 +1,29 @@
+# Copy to terraform.tfvars and set values for your account/project.
+# Required: dbt_cloud_account_id, connection_id, credential_id.
+# Project: set project_id for an existing project, OR leave unset and set project_name to create one.
+# Token: set DBT_CLOUD_TOKEN in the environment (do not put in this file).
+
+dbt_cloud_account_id = 51798
+
+# Option A: use an existing project (no lookup by name – you provide the ID)
+project_id = 423218
+
+# From dbt Cloud: Project Settings → Connection (connection_id), Credentials (credential_id)
+connection_id = 51284
+credential_id = 487354
+
+# Option B: create a new project (leave project_id commented out, set name/description)
+# project_id         = null
+# project_name       = "My dbt Project"
+# project_description = "Short description"
+
+# Optional overrides
+# dbt_version        = "latest-fusion"
+# staging_branch     = "staging"
+# schedule_cron      = "0 9 * * 1-5"
+# num_threads        = 4
+
+# Set to true to disable job triggers (useful for initial import or testing)
+# deactivate_jobs_pr       = false
+# deactivate_jobs_merge   = false
+# deactivate_jobs_schedule = false
