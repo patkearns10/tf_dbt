@@ -1,0 +1,6 @@
+# Python deps for the Streamlit app
+streamlit>=1.28.0
+
+# Terraform is not a Python package. For local run you must install it separately:
+#   https://developer.hashicorp.com/terraform/install
+# When you deploy via Docker (e.g. Streamlit Community Cloud), Terraform is already in the image.

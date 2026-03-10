@@ -17,6 +17,27 @@ You provide the project (by ID or by creating a new one), connection, and creden
 
 ## Quick start
 
+### Option A: Streamlit app (UI)
+
+**Local run**
+
+1. Install: `pip install -r requirements.txt`
+2. Install [Terraform](https://developer.hashicorp.com/terraform/install) and ensure it’s on your PATH (Terraform is not a pip package).
+3. Run: `streamlit run app.py`
+4. Enter your **DBT_CLOUD_TOKEN** and the rest of the options in the form.
+5. Use **Init** → **Plan** → **Apply** (or **Destroy** to tear down). State is session-only; close the browser and it’s gone.
+
+**Public deploy (Render)**
+
+1. Push this repo to GitHub and connect it in [Render](https://render.com).
+2. Create a **Web Service**, use the repo (set **Root Directory** to `tf_dbt` if the app lives in a subfolder).
+3. Render will detect the Dockerfile, build the image (includes Terraform), and run the app. The container listens on `PORT` automatically.
+4. Deploy; users get a public URL and Terraform works in-browser.
+
+**Local Docker:** `docker build -t tf-dbt-app . && docker run -p 8501:8501 tf-dbt-app`
+
+### Option B: Terraform CLI
+
 1. Copy `terraform.tfvars.example` to `terraform.tfvars` and set your account ID, project ID (or project name to create one), and connection/credential IDs.
 2. Set the `DBT_CLOUD_TOKEN` environment variable.
 3. Run `terraform plan` then `terraform apply`.

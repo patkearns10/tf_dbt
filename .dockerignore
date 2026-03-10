@@ -1,0 +1,25 @@
+# Git and Python
+.git
+.gitignore
+__pycache__
+*.pyc
+.venv
+venv
+env
+
+# Terraform local state / cache (not needed in image; each session gets a temp workspace)
+.terraform
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+terraform.tfvars.example
+
+# Docs (optional; uncomment to shrink image)
+# README.md
+# SETUP.md
+# GET_CONNECTION_IDS.md
+
+# Misc
+.env
+*.md
+.streamlit
