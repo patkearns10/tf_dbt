@@ -46,13 +46,15 @@ variable "project_type" {
 # -----------------------------------------------------------------------------
 
 variable "connection_id" {
-  description = "dbt Cloud connection ID used by all environments."
+  description = "dbt Cloud connection ID used by all environments. Set to null to create environments without connection (configure in dbt Cloud app)."
   type        = number
+  default     = null
 }
 
 variable "credential_id" {
-  description = "dbt Cloud credential ID for deployment environments (PROD, STAGING, CI)."
+  description = "dbt Cloud credential ID for deployment environments (PROD, STAGING, CI). Set to null when connection_id is null."
   type        = number
+  default     = null
 }
 
 # -----------------------------------------------------------------------------

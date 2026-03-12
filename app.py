@@ -36,6 +36,7 @@ def build_tfvars(
     project_name,
     project_description,
     project_type,
+    use_connection_credential,
     connection_id,
     credential_id,
     dbt_cloud_host_url,
@@ -71,8 +72,14 @@ def build_tfvars(
         if project_type is not None:
             lines.append("project_type = " + str(int(project_type)))
     lines.append("")
-    lines.append("connection_id = " + str(int(connection_id)))
-    lines.append("credential_id = " + str(int(credential_id)))
+    if use_connection_credential and connection_id is not None and credential_id is not None:
+        lines.append("# From dbt Cloud: Project Settings → Connection (connection_id), Credentials (credential_id)")
+        lines.append("connection_id = " + str(int(connection_id)))
+        lines.append("credential_id = " + str(int(credential_id)))
+    else:
+        lines.append("# No connection/credential — configure in dbt Cloud app after create")
+        lines.append("connection_id = null")
+        lines.append("credential_id = null")
     lines.append("")
     if dbt_cloud_host_url:
         lines.append('dbt_cloud_host_url = "' + str(dbt_cloud_host_url).replace('"', '\\"') + '"')
@@ -134,15 +141,27 @@ def main():
 
     st.divider()
 
-    # Required
+    # Required: token (above) and account ID
     st.subheader("Required")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        dbt_cloud_account_id = st.number_input("dbt_cloud_account_id", min_value=1, value=51798, step=1)
-    with col2:
-        connection_id = st.number_input("connection_id", min_value=1, value=51284, step=1)
-    with col3:
-        credential_id = st.number_input("credential_id", min_value=1, value=487354, step=1)
+    st.caption("Token (above) and account ID are required. Connection/credential are optional.")
+    dbt_cloud_account_id = st.number_input("dbt_cloud_account_id", min_value=1, value=51798, step=1, help="Your dbt Cloud account ID")
+
+    # Connection: optional (null) or set both IDs
+    st.subheader("Connection & credentials")
+    use_connection_credential = st.checkbox(
+        "Set connection_id and credential_id (use existing project connection)",
+        value=False,
+        help="When unchecked, environments are created without connection; configure in dbt Cloud app later.",
+    )
+    if use_connection_credential:
+        col1, col2 = st.columns(2)
+        with col1:
+            connection_id = st.number_input("connection_id", min_value=1, value=51284, step=1, help="From Project Settings → Connection")
+        with col2:
+            credential_id = st.number_input("credential_id", min_value=1, value=487354, step=1, help="From Project Settings → Credentials")
+    else:
+        connection_id = None
+        credential_id = None
 
     # Project: existing vs new
     st.subheader("Project")
@@ -156,7 +175,7 @@ def main():
         project_id = None
         project_name = st.text_input("project_name", value="My dbt Project", placeholder="Project name")
         project_description = st.text_input("project_description", value="", placeholder="Short description")
-        project_type = st.number_input("project_type", min_value=0, value=0, step=1, help="0 = standard/job-based")
+        project_type = 0
 
     # Optional
     with st.expander("Optional overrides"):
@@ -188,6 +207,7 @@ def main():
             project_name=project_name or "",
             project_description=project_description or "",
             project_type=project_type,
+            use_connection_credential=use_connection_credential,
             connection_id=connection_id,
             credential_id=credential_id,
             dbt_cloud_host_url=dbt_cloud_host_url or None,
@@ -235,6 +255,7 @@ def main():
                 project_name=project_name or "",
                 project_description=project_description or "",
                 project_type=project_type,
+                use_connection_credential=use_connection_credential,
                 connection_id=connection_id,
                 credential_id=credential_id,
                 dbt_cloud_host_url=dbt_cloud_host_url or None,

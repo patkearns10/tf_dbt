@@ -35,6 +35,13 @@ resource "dbtcloud_environment" "dev" {
   dbt_version                = var.dbt_version
   use_custom_branch          = false
   enable_model_query_history = false
+
+  lifecycle {
+    precondition {
+      condition     = (var.connection_id == null) == (var.credential_id == null)
+      error_message = "connection_id and credential_id must both be set or both be null."
+    }
+  }
 }
 
 resource "dbtcloud_environment" "prod" {
